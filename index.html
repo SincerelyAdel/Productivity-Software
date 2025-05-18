@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkspaceFlow - Productivity App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>WorkspaceFlow</h1>
+            </div>
+            
+            <div class="workspace-section">
+                <h2>Workspaces</h2>
+                <div class="add-workspace">
+                    <input type="text" id="workspaceInput" placeholder="New workspace...">
+                    <button id="addWorkspaceBtn">+</button>
+                </div>
+                
+                <ul id="workspaceList" class="treeview">
+
+                </ul>
+            </div>
+            <div class="team-viewer">
+                <h3>Team Members</h3>
+                <div id="teamMembers" class="team-members-list">
+
+                </div>
+                <button id="addTeamMemberBtn">Add Member</button>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <header class="board-header">
+                <div class="header-info">
+                    <h2 id="currentWorkspace">Development</h2>
+                    <h3 id="currentProject">Website Redesign</h3>
+                </div>
+                
+                <div class="view-switcher">
+                    <button id="kanbanViewBtn" class="view-btn active">Kanban View</button>
+                    <button id="taskViewBtn" class="view-btn">Task View</button>
+                </div>
+                
+                <div class="task-input-container">
+                    <input type="text" id="taskInput" placeholder="Add a new task...">
+                    <select id="assigneeSelect">
+                        <option value="">Assign to...</option>
+                    </select>
+                    <button id="addTaskBtn">Add Task</button>
+                </div>
+            </header>
+            
+            <div id="kanbanView" class="view-container active">
+                <div class="kanban-board" id="kanbanBoard">
+
+                </div>
+            </div>
+            
+            <div id="taskView" class="view-container">
+                <div class="task-list-view" id="taskListView">
+
+                </div>
+            </div>
+        </main>
+        
+        <div id="taskDetailModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2 id="modalTaskTitle">Task Title</h2>
+                
+                <div class="modal-grid">
+                    <div class="modal-col">
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="taskDescription"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="taskStatus"></select>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-col">
+                        <div class="form-group">
+                            <label>Assignees</label>
+                            <div id="taskAssignees" class="assignee-list"></div>
+                            <button id="addAssigneeBtn" class="small-btn">Add Assignee</button>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Due Date</label>
+                            <input type="date" id="taskDueDate">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comments-section">
+                    <h3>Comments</h3>
+                    <div id="commentsList"></div>
+                    <div class="add-comment">
+                        <input type="text" id="commentInput" placeholder="Add a comment...">
+                        <button id="addCommentBtn">Comment</button>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button id="saveTaskBtn" class="primary-btn">Save Changes</button>
+                    <button id="cancelTaskBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- HTML Updates for Team Member Modal and Layout Changes -->
+
+<!-- 1. Add Team Member Modal HTML (add this before the closing body tag) -->
+<div id="teamMemberModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" id="closeTeamModal">&times;</span>
+        <h2>Add Team Member</h2>
+        
+        <div class="form-group">
+            <label for="memberName">Name</label>
+            <input type="text" id="memberName" placeholder="Enter team member name">
+        </div>
+        
+        <div class="form-group">
+            <label>Color</label>
+            <div class="color-picker">
+                <div class="color-option" data-color="#4a6fa5" style="background-color: #4a6fa5;"></div>
+                <div class="color-option" data-color="#e74c3c" style="background-color: #e74c3c;"></div>
+                <div class="color-option" data-color="#2ecc71" style="background-color: #2ecc71;"></div>
+                <div class="color-option" data-color="#f39c12" style="background-color: #f39c12;"></div>
+                <div class="color-option" data-color="#9b59b6" style="background-color: #9b59b6;"></div>
+                <div class="color-option" data-color="#1abc9c" style="background-color: #1abc9c;"></div>
+            </div>
+        </div>
+        
+        <div class="modal-actions">
+            <button id="saveTeamMemberBtn" class="primary-btn">Add Member</button>
+            <button id="cancelTeamMemberBtn">Cancel</button>
+        </div>
+    </div>
+</div>
+<!-- Project Modal HTML -->
+<div id="projectModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" id="closeProjectModal">&times;</span>
+        <h2>Add New Project</h2>
+        
+        <div class="form-group">
+            <label for="projectNameInput">Project Name</label>
+            <input type="text" id="projectNameInput" placeholder="Enter project name">
+        </div>
+        
+        <div class="form-group">
+            <label for="projectDescriptionInput">Description</label>
+            <textarea id="projectDescriptionInput" placeholder="Describe the project goals and scope"></textarea>
+        </div>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="projectStartDateInput">Start Date</label>
+                <input type="date" id="projectStartDateInput">
+            </div>
+            
+            <div class="form-group">
+                <label for="projectEndDateInput">Target End Date</label>
+                <input type="date" id="projectEndDateInput">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="projectPrioritySelect">Priority</label>
+            <select id="projectPrioritySelect">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Project Color</label>
+            <div class="color-picker">
+                <div class="color-option" data-color="#4a6fa5" style="background-color: #4a6fa5;"></div>
+                <div class="color-option" data-color="#e74c3c" style="background-color: #e74c3c;"></div>
+                <div class="color-option" data-color="#2ecc71" style="background-color: #2ecc71;"></div>
+                <div class="color-option" data-color="#f39c12" style="background-color: #f39c12;"></div>
+                <div class="color-option" data-color="#9b59b6" style="background-color: #9b59b6;"></div>
+                <div class="color-option" data-color="#1abc9c" style="background-color: #1abc9c;"></div>
+            </div>
+        </div>
+        
+        <div class="modal-actions">
+            <button id="saveProjectBtn" class="primary-btn">Create Project</button>
+            <button id="cancelProjectBtn">Cancel</button>
+        </div>
+    </div>
+</div>
+
+    <script src="app.js"></script>
+</body>
+</html>

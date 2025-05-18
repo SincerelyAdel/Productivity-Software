@@ -1,0 +1,887 @@
+/* styles.css - Fixed Version */
+:root {
+    --sidebar-bg: #5f2eea;
+    --sidebar-hover: #4a21b8;
+    --sidebar-text: #ffffff;
+    --main-bg: #f9f9f9;
+    --column-bg: #f0f0f0;
+    --card-bg: #ffffff;
+    --primary-color: #5f2eea;
+    --secondary-color: #166088;
+    --task-border: #e6e6e6;
+    --text-color: #333333;
+    --light-text: #666666;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    color: var(--text-color);
+    background-color: var(--main-bg);
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* App Container - Fixed to ensure proper layout */
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden; /* Prevent overflow issues */
+}
+
+/* Sidebar Styles - Fixed position and z-index */
+.sidebar {
+    width: 20%;
+    min-width: 250px; /* Ensure minimum width */
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative; /* Establish stacking context */
+    z-index: 10; /* Higher z-index to prevent overlap */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Add shadow for visual separation */
+}
+
+.logo h1 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.workspace-section {
+    flex: 1;
+}
+
+.workspace-section h2 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.add-workspace {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+#workspaceInput {
+    flex: 1;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+#workspaceInput::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+#addWorkspaceBtn {
+    padding: 0.6rem 1rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#addWorkspaceBtn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Treeview Styles */
+.treeview {
+    list-style-type: none;
+}
+
+.tree-item {
+    margin-bottom: 0.3rem;
+}
+
+.tree-header {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.tree-header:hover {
+    background-color: var(--sidebar-hover);
+}
+
+.tree-header.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+.tree-toggle {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    line-height: 16px;
+    margin-right: 0.5rem;
+    transform: rotate(0deg);
+    transition: transform 0.2s;
+}
+
+.tree-toggle.open {
+    transform: rotate(90deg);
+}
+
+.tree-children {
+    padding-left: 1.5rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.tree-children.open {
+    max-height: 500px;
+}
+
+/* Team Viewer Styles */
+.team-viewer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.team-viewer h3 {
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+}
+
+.team-members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.team-member {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.team-member:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.team-member-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.team-member-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#addTeamMemberBtn {
+    width: 100%;
+    padding: 0.6rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+#addTeamMemberBtn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+#teamMemberModal {
+    z-index: 1000;
+}
+
+#teamMemberModal .modal-content {
+    max-width: 500px;
+}
+
+/* Main Content Styles - Fixed z-index and position */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    position: relative; /* Establish stacking context */
+    z-index: 5; /* Lower than sidebar */
+    overflow: hidden; /* Contain overflow */
+}
+
+.board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--task-border);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-info h2 {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin-bottom: 0.2rem;
+}
+
+.header-info h3 {
+    font-size: 1rem;
+    color: var(--light-text);
+    font-weight: normal;
+}
+
+.view-switcher {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.view-btn {
+    padding: 0.6rem 1rem;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.view-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.task-input-container {
+    display: flex;
+    width: 100%;
+    gap: 0.5rem;
+}
+
+#taskInput {
+    flex: 1;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+}
+
+#assigneeSelect {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    min-width: 120px;
+}
+
+#addTaskBtn {
+    padding: 0.8rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+#addTaskBtn:hover {
+    background-color: var(--sidebar-hover);
+}
+
+/* View Container Styles - Fixed overflow handling */
+.view-container {
+    flex: 1;
+    overflow: auto;
+    display: none;
+    padding: 1rem;
+}
+
+.view-container.active {
+    display: block;
+}
+
+/* Kanban Board Styles - Fixed height calculation */
+.kanban-board {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    height: calc(100% - 1rem);
+}
+
+.kanban-column {
+    min-width: 280px;
+    background-color: var(--column-bg);
+    border-radius: 8px;
+    padding: 1rem;
+    flex: 1;
+}
+
+.column-header {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.task-cards {
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    overflow-y: auto;
+    max-height: calc(100vh - 250px); /* Adjusted to prevent overflow */
+}
+
+/* Task Card Styles */
+.task-card {
+    background-color: var(--card-bg);
+    border-radius: 6px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 4px solid var(--primary-color);
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.task-card h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.task-card p {
+    font-size: 0.9rem;
+    color: var(--light-text);
+    margin-bottom: 0.8rem;
+}
+
+.card-assignees {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-bottom: 0.8rem;
+}
+
+.card-assignee {
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.assignee-avatar {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #ccc;
+    font-size: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.card-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 0.3rem;
+    color: var(--light-text);
+}
+
+.card-actions button:hover {
+    color: var(--primary-color);
+}
+
+/* Task List View Styles */
+.task-list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    overflow-y: auto;
+    height: 100%;
+    width: 100%;
+}
+
+.task-detail-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.color-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border: 2px solid transparent;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+.color-option.selected {
+    border-color: #333;
+    transform: scale(1.1);
+}
+
+.task-detail-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--task-border);
+}
+
+.task-detail-header h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.task-status-badge {
+    display: inline-block;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    background-color: #e6e6e6;
+}
+
+.task-detail-body {
+    flex: 1;
+    margin-bottom: 1rem;
+}
+
+.task-description {
+    font-size: 0.9rem;
+    color: var(--light-text);
+    margin-bottom: 1rem;
+}
+
+.task-detail-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--light-text);
+}
+
+.task-detail-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-assignees {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.task-detail-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.task-detail-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--light-text);
+    font-size: 0.9rem;
+}
+
+.task-detail-actions button:hover {
+    color: var(--primary-color);
+}
+
+/* Modal Styles - Fixed z-index to ensure it's on top */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Ensure it's above everything */
+    overflow-y: auto;
+}
+
+.modal-content {
+    position: relative;
+    background-color: white;
+    margin: 5% auto;
+    padding: 2rem;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.assignee-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.small-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.comments-section {
+    margin-bottom: 1.5rem;
+}
+
+.comments-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+#commentsList {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.comment-item {
+    padding: 0.8rem;
+    border-bottom: 1px solid #eee;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
+    font-size: 0.8rem;
+}
+
+.comment-author {
+    font-weight: 600;
+}
+
+.comment-date {
+    color: var(--light-text);
+}
+
+.add-comment {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#commentInput {
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#addCommentBtn {
+    padding: 0.8rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.primary-btn {
+    padding: 0.8rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#cancelTaskBtn {
+    padding: 0.8rem 1.5rem;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Responsive adjustments - Fixed mobile layout */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 25%;
+    }
+    
+    .modal-content {
+        width: 90%;
+    }
+    
+    .modal-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 40vh;
+        min-width: unset; /* Remove the min-width constraint */
+        z-index: 5; /* Lower z-index for mobile */
+    }
+    
+    .main-content {
+        height: 60vh;
+        z-index: 1; /* Lower than sidebar on mobile */
+    }
+    
+    .board-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .task-list-view {
+        grid-template-columns: 1fr;
+    }
+    
+    .kanban-board {
+        height: calc(60vh - 150px);
+    }
+}
+
+/* 5. Remove animation for mobile devices */
+@media (max-width: 768px) {
+    .task-card:hover {
+        transform: none;
+    }
+    
+    .color-option:hover {
+        transform: none;
+    }
+    
+    .color-option.selected {
+        transform: none;
+    }
+}
+
+/* Project Modal CSS */
+
+/* Project Modal Styles */
+#projectModal .modal-content {
+    max-width: 600px;
+}
+
+/* Form grid for two-column layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Project card styles (to show color in workspace list) */
+.project-item[data-color] .tree-header {
+    border-left: 4px solid var(--project-color, var(--primary-color));
+    padding-left: 0.6rem;
+}
+
+/* Project priority indicators */
+.priority-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    margin-left: 0.5rem;
+    color: white;
+}
+
+.priority-low {
+    background-color: #2ecc71;
+}
+
+.priority-medium {
+    background-color: #f39c12;
+}
+
+.priority-high {
+    background-color: #e74c3c;
+}
+
+.priority-urgent {
+    background-color: #9b59b6;
+}
+
+/* Project dates display */
+.project-dates {
+    font-size: 0.75rem;
+    color: var(--light-text);
+    margin-top: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Project description tooltip */
+.project-description-tooltip {
+    position: relative;
+    display: inline-block;
+    margin-left: 0.3rem;
+    cursor: help;
+}
+
+.tooltip-icon {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    position: absolute;
+    z-index: 100;
+    width: 200px;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 4px;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.project-description-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
