@@ -1,8 +1,6 @@
-/* app.js */
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 App initialization started');
     
-    // Status columns for Kanban board
     const statuses = [
         'Backlog',
         'Planning',
@@ -15,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'Completed'
     ];
     
-    // DOM Elements
     const taskInput = document.getElementById('taskInput');
     const assigneeSelect = document.getElementById('assigneeSelect');
     const addTaskBtn = document.getElementById('addTaskBtn');
@@ -39,29 +36,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelTeamMemberBtn = document.getElementById('cancelTeamMemberBtn');
     const colorOptions = document.querySelectorAll('.color-option');
 
-    let selectedColor = '#4a6fa5'; // Default color
+    let selectedColor = '#4a6fa5'; 
 
-    // Initialize color selection
     colorOptions.forEach(option => {
         option.addEventListener('click', () => {
-            // Remove selected class from all options
             colorOptions.forEach(opt => opt.classList.remove('selected'));
             
-            // Add selected class to clicked option
             option.classList.add('selected');
             
-            // Update selected color
             selectedColor = option.getAttribute('data-color');
             console.log(`🎨 Color selected: ${selectedColor}`);
         });
     });
 
-    // Select the first color by default
     if (colorOptions.length > 0) {
         colorOptions[0].classList.add('selected');
     }
 
-    // Open team member modal
     addTeamMemberBtn.addEventListener('click', () => {
         console.log('🖱️ Add team member button clicked');
         memberNameInput.value = '';
@@ -77,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
     closeTeamModal.addEventListener('click', closeTeamMemberModal);
     cancelTeamMemberBtn.addEventListener('click', closeTeamMemberModal);
 
-    // Close modal when clicking outside
     window.addEventListener('click', (e) => {
         if (e.target === teamMemberModal) {
             console.log('🖱️ Clicked outside team modal to close');
@@ -85,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-        // Save team member
     saveTeamMemberBtn.addEventListener('click', () => {
         const name = memberNameInput.value.trim();
         
@@ -97,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         console.log(`👥 Adding new team member: ${name} with color: ${selectedColor}`);
         
-        // Generate initials from name
         const nameParts = name.split(' ');
         let initials = '';
         if (nameParts.length >= 2) {
@@ -107,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         initials = initials.toUpperCase();
         
-        // Create new team member
         const newMemberId = 'user-' + Date.now();
         const newMember = {
             id: newMemberId,
@@ -124,15 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
         closeTeamMemberModal();
     });
 
-    // Allow Enter key to submit in modal
     memberNameInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             saveTeamMemberBtn.click();
         }
     });
 
-    // 2. Updated Team Members Rendering Function
-    // Replace the existing renderTeamMembers function with this one
     const renderTeamMembers = () => {
         console.log(`👥 Rendering ${teamMembers.length} team members`);
         
@@ -151,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
     };
     
-    // Check if DOM elements were found
     console.log('DOM Elements loaded:', {
         taskInput: !!taskInput,
         assigneeSelect: !!assigneeSelect,
@@ -163,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
         teamMembersContainer: !!teamMembersContainer
     });
     
-    // Modal elements
     const taskDetailModal = document.getElementById('taskDetailModal');
     const modalTaskTitle = document.getElementById('modalTaskTitle');
     const taskDescription = document.getElementById('taskDescription');
@@ -177,9 +159,87 @@ document.addEventListener('DOMContentLoaded', () => {
     const commentsList = document.getElementById('commentsList');
     const commentInput = document.getElementById('commentInput');
     const addCommentBtn = document.getElementById('addCommentBtn');
+    const projectModal = document.getElementById('projectModal');
+    const closeProjectModal = document.getElementById('closeProjectModal');
+    const projectNameInput = document.getElementById('projectNameInput');
+    const saveProjectBtn = document.getElementById('saveProjectBtn');
+    const cancelProjectBtn = document.getElementById('cancelProjectBtn');
 
+    let currentWorkspaceForProject = null;
+
+    const setupProjectModalTriggers = () => {
+        document.querySelectorAll('.new-project-item').forEach(item => {
+            const newItem = item.cloneNode(true);
+            item.parentNode.replaceChild(newItem, item);
+            
+            newItem.addEventListener('click', () => {
+                const parent = newItem.closest('.tree-children');
+                const workspaceId = parent.getAttribute('data-parent');
+                
+                console.log(`🌳 Add new project clicked for workspace: ${workspaceId}`);
+                
+                currentWorkspaceForProject = workspaceId;
+                
+                projectNameInput.value = '';
+                
+                projectModal.style.display = 'block';
+                projectNameInput.focus();
+            });
+        });
+    };
     
-    // Initialize Data
+    setTimeout(() => {
+        setupProjectModalTriggers();
+        
+        originalAddTreeListeners = addTreeEventListeners;
+        addTreeEventListeners = function() {
+            originalAddTreeListeners();
+            setupProjectModalTriggers();
+        };
+    }, 100);
+
+    const closeProjectModalFunc = () => {
+        console.log('🔳 Closing project modal');
+        projectModal.style.display = 'none';
+        currentWorkspaceForProject = null;
+    };
+
+    closeProjectModal.addEventListener('click', closeProjectModal);
+    cancelProjectBtn.addEventListener('click', closeProjectModal);
+
+    window.addEventListener('click', (e) => {
+        if (e.target === projectModal) {
+            closeProjectModalFunc();
+        }
+    });
+
+    saveProjectBtn.addEventListener('click', () => {
+        const projectName = projectNameInput.value.trim();
+        
+        if (!projectName) {
+            alert('Please enter a project name');
+            return;
+        }
+        
+        if (!currentWorkspaceForProject) {
+            console.warn('⚠️ No workspace selected for new project');
+            closeProjectModal();
+            return;
+        }
+        
+        console.log(`➕ Adding new project: ${projectName} to workspace: ${currentWorkspaceForProject}`);
+        
+        addProject(currentWorkspaceForProject, projectName);
+        
+        closeProjectModalFunc();
+    });
+
+    projectNameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            saveProjectBtn.click();
+        }
+    });
+
     let workspaces = [];
     
     let teamMembers = [];
@@ -194,7 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return workspace;
     };
     
-    // Get current project object
     const getCurrentProject = () => {
         const workspace = getCurrentWorkspace();
         if (!workspace) return null;
@@ -204,12 +263,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return project;
     };
     
-    // Generate the Kanban board columns
     const generateKanbanBoard = () => {
         console.log('🔄 Generating Kanban board');
         kanbanBoard.innerHTML = '';
         
-        // Create a column for each status
         statuses.forEach(status => {
             const column = document.createElement('div');
             column.className = 'kanban-column';
@@ -223,15 +280,12 @@ document.addEventListener('DOMContentLoaded', () => {
             kanbanBoard.appendChild(column);
         });
         
-        // Populate the board with tasks
         renderTasks();
     };
     
-    // Render tasks for the current project
     const renderTasks = () => {
         console.log('🔄 Rendering tasks');
         
-        // Update workspace and project names in header
         const currentWs = getCurrentWorkspace();
         const currentProj = getCurrentProject();
         
@@ -245,17 +299,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         console.log(`📋 Rendering ${currentProj.tasks.length} tasks for project: ${currentProj.name}`);
         
-        // Clear all task cards first
         document.querySelectorAll('.task-cards').forEach(column => {
             column.innerHTML = '';
         });
         
-        // Clear task list view
         taskListView.innerHTML = '';
         
-        // Render tasks in appropriate columns
         currentProj.tasks.forEach(task => {
-            // For Kanban view
             const taskCard = createTaskCard(task);
             const column = document.querySelector(`.task-cards[data-status="${task.status}"]`);
             if (column) {
@@ -264,15 +314,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn(`⚠️ Column not found for status: ${task.status}`);
             }
             
-            // For Task list view
             const taskDetailCard = createTaskDetailCard(task);
             taskListView.appendChild(taskDetailCard);
         });
         
-        // Save to localStorage
     };
     
-    // Create a task card element for Kanban view
     const createTaskCard = (task) => {
         console.log(`🎴 Creating kanban card for task: ${task.id} - ${task.title}`);
         
@@ -280,7 +327,6 @@ document.addEventListener('DOMContentLoaded', () => {
         card.className = 'task-card';
         card.setAttribute('data-id', task.id);
         
-        // Generate assignee HTML
         let assigneesHTML = '';
         if (task.assignees && task.assignees.length > 0) {
             assigneesHTML = '<div class="card-assignees">';
@@ -310,7 +356,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         
-        // Event listeners for card buttons
         const editBtn = card.querySelector('.edit-btn');
         const moveLeftBtn = card.querySelector('.move-left-btn');
         const moveRightBtn = card.querySelector('.move-right-btn');
@@ -340,14 +385,12 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteTask(task.id);
         });
         
-        // Make the card draggable
         card.draggable = true;
         card.addEventListener('dragstart', (e) => {
             e.dataTransfer.setData('text/plain', task.id);
             console.log(`🔄 Drag started for task: ${task.id}`);
         });
         
-        // Open modal on card click
         card.addEventListener('click', () => {
             console.log(`🖱️ Card clicked for task: ${task.id}`);
             openTaskModal(task.id);
@@ -356,7 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return card;
     };
     
-    // Create task detail card for Task view
     const createTaskDetailCard = (task) => {
         console.log(`📝 Creating detail card for task: ${task.id} - ${task.title}`);
         
@@ -364,7 +406,6 @@ document.addEventListener('DOMContentLoaded', () => {
         card.className = 'task-detail-card';
         card.setAttribute('data-id', task.id);
         
-        // Generate assignee HTML
         let assigneesHTML = '';
         if (task.assignees && task.assignees.length > 0) {
             assigneesHTML = '<div class="detail-assignees">';
@@ -381,7 +422,6 @@ document.addEventListener('DOMContentLoaded', () => {
             assigneesHTML += '</div>';
         }
         
-        // Format date
         const dueDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No date';
         
         card.innerHTML = `
@@ -405,7 +445,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         
-        // Event listeners
         const editBtn = card.querySelector('.detail-edit-btn');
         const deleteBtn = card.querySelector('.detail-delete-btn');
         
@@ -422,7 +461,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return card;
     };
     
-    // Open task detail modal
     const openTaskModal = (taskId) => {
         console.log(`🔳 Opening modal for task: ${taskId}`);
         
@@ -440,12 +478,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         console.log('📋 Task details:', task);
         
-        // Fill modal with task data
         modalTaskTitle.textContent = task.title;
         taskDescription.value = task.description;
         taskDueDate.value = task.dueDate || '';
         
-        // Populate status dropdown
         taskStatus.innerHTML = '';
         statuses.forEach(status => {
             const option = document.createElement('option');
@@ -457,20 +493,15 @@ document.addEventListener('DOMContentLoaded', () => {
             taskStatus.appendChild(option);
         });
         
-        // Populate assignees
         renderTaskAssignees(task);
         
-        // Populate comments
         renderComments(task);
         
-        // Set data attribute for save button
         saveTaskBtn.setAttribute('data-task-id', taskId);
         
-        // Show modal
         taskDetailModal.style.display = 'block';
     };
     
-    // Render comments in task modal
     const renderComments = (task) => {
         console.log(`💬 Rendering ${task.comments ? task.comments.length : 0} comments for task: ${task.id}`);
         
@@ -498,7 +529,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    // Add comment to task
     const addComment = () => {
         const taskId = saveTaskBtn.getAttribute('data-task-id');
         const commentText = commentInput.value.trim();
@@ -522,12 +552,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Initialize comments array if it doesn't exist
         if (!task.comments) {
             task.comments = [];
         }
         
-        // Add new comment (using first team member as author for simplicity)
         const newComment = {
             id: 'comment-' + Date.now(),
             author: teamMembers.length > 0 ? teamMembers[0].id : 'unknown',
@@ -538,12 +566,10 @@ document.addEventListener('DOMContentLoaded', () => {
         task.comments.push(newComment);
         console.log('💬 Comment added:', newComment);
         
-        // Clear input and re-render
         commentInput.value = '';
         renderComments(task);
     };
     
-    // Render assignees in task modal
     const renderTaskAssignees = (task) => {
         console.log(`👥 Rendering ${task.assignees ? task.assignees.length : 0} assignees for task: ${task.id}`);
         
@@ -561,7 +587,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button class="remove-assignee" data-id="${member.id}">×</button>
                     `;
                     
-                    // Remove assignee button
                     const removeBtn = assigneeElem.querySelector('.remove-assignee');
                     removeBtn.addEventListener('click', () => {
                         const taskId = saveTaskBtn.getAttribute('data-task-id');
@@ -575,7 +600,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    // Remove assignee from task
     const removeTaskAssignee = (taskId, assigneeId) => {
         console.log(`👤 Removing assignee ${assigneeId} from task ${taskId}`);
         
@@ -591,19 +615,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Remove assignee
         task.assignees = task.assignees.filter(id => id !== assigneeId);
         
-        // Re-render assignees
         renderTaskAssignees(task);
     };
     
-    // Add assignee to task from modal
     const addTaskAssigneeFromModal = () => {
         const taskId = saveTaskBtn.getAttribute('data-task-id');
         console.log(`👤 Adding assignee UI opened for task: ${taskId}`);
         
-        // For simplicity, create a dropdown with team members
         const selectHTML = `
             <div class="assignee-select-container">
                 <select id="modalAssigneeSelect">
@@ -617,12 +637,10 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         
-        // Add select to DOM
         const selectContainer = document.createElement('div');
         selectContainer.innerHTML = selectHTML;
         taskAssignees.appendChild(selectContainer);
         
-        // Event listeners
         const modalAssigneeSelect = document.getElementById('modalAssigneeSelect');
         const confirmAssigneeBtn = document.getElementById('confirmAssigneeBtn');
         const cancelAssigneeBtn = document.getElementById('cancelAssigneeBtn');
@@ -644,7 +662,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     
-    // Add assignee to task
     const addTaskAssignee = (taskId, assigneeId) => {
         console.log(`👤 Adding assignee ${assigneeId} to task ${taskId}`);
         
@@ -660,31 +677,25 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Initialize assignees array if it doesn't exist
         if (!task.assignees) {
             task.assignees = [];
         }
         
-        // Check if assignee already exists
         if (task.assignees.includes(assigneeId)) {
             console.warn(`⚠️ Assignee ${assigneeId} already assigned to task ${taskId}`);
             return;
         }
         
-        // Add assignee
         task.assignees.push(assigneeId);
         
-        // Re-render assignees
         renderTaskAssignees(task);
     };
     
-    // Close modal
     const closeTaskModal = () => {
         console.log('🔳 Closing task modal');
         taskDetailModal.style.display = 'none';
     };
     
-    // Save task changes
     const saveTaskChanges = () => {
         const taskId = saveTaskBtn.getAttribute('data-task-id');
         console.log(`💾 Saving changes for task: ${taskId}`);
@@ -701,7 +712,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Update task data
         task.description = taskDescription.value;
         task.status = taskStatus.value;
         task.dueDate = taskDueDate.value;
@@ -712,12 +722,10 @@ document.addEventListener('DOMContentLoaded', () => {
             dueDate: task.dueDate
         });
         
-        // Save and render
         renderTasks();
         closeTaskModal();
     };
     
-    // Move a task left or right in the workflow
     const moveTask = (taskId, direction) => {
         console.log(`🔄 Moving task ${taskId} ${direction}`);
         
@@ -751,7 +759,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTasks();
     };
     
-    // Delete a task
     const deleteTask = (taskId) => {
         console.log(`🗑️ Deleting task: ${taskId}`);
         
@@ -761,7 +768,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Remove the task
         const initialTaskCount = project.tasks.length;
         project.tasks = project.tasks.filter(t => t.id !== taskId);
         
@@ -769,11 +775,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         renderTasks();
         
-        // Close modal if open
         closeTaskModal();
     };
     
-    // Add a new task
     const addTask = () => {
         const taskTitle = taskInput.value.trim();
         if (!taskTitle) {
@@ -789,20 +793,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Get assigned user
         let assignees = [];
         if (assigneeSelect.value) {
             assignees.push(assigneeSelect.value);
             console.log(`👤 Task assigned to: ${assigneeSelect.value}`);
         }
         
-        // Create new task
         const newTaskId = 'task-' + Date.now();
         const newTask = {
             id: newTaskId,
             title: taskTitle,
             description: 'New task description',
-            status: 'Backlog', // Default to first column
+            status: 'Backlog',
             dueDate: '',
             assignees: assignees,
             comments: []
@@ -810,16 +812,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         console.log('📋 New task created:', newTask);
         
-        // Add to project
         project.tasks.push(newTask);
         
-        // Clear input and render
         taskInput.value = '';
         renderTasks();
         taskInput.focus();
     };
     
-    // Add a new workspace
     const addWorkspace = () => {
         const workspaceName = workspaceInput.value.trim();
         if (!workspaceName) {
@@ -835,13 +834,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const newWorkspace = {
             id: newWorkspaceId,
             name: workspaceName,
-            projects: [
-                {
-                    id: newProjectId,
-                    name: 'New Project',
-                    tasks: []
-                }
-            ]
+            projects: []
         };
         
         console.log('📋 New workspace created:', newWorkspace);
@@ -853,18 +846,15 @@ document.addEventListener('DOMContentLoaded', () => {
         switchWorkspace(newWorkspaceId, newProjectId);
     };
     
-    // Add a new project to active workspace
     const addProject = (workspaceId, projectName = 'New Project') => {
         console.log(`➕ Adding new project: ${projectName} to workspace: ${workspaceId}`);
         
-        // Find the workspace
         const workspace = workspaces.find(w => w.id === workspaceId);
         if (!workspace) {
             console.warn(`⚠️ Workspace ${workspaceId} not found when adding project`);
             return;
         }
         
-        // Create new project
         const newProjectId = 'project-' + Date.now();
         const newProject = {
             id: newProjectId,
@@ -874,19 +864,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         console.log('📋 New project created:', newProject);
         
-        // Actually add the project to the workspace
         workspace.projects.push(newProject);
         
-        // Render updates
         renderWorkspaces();
         
-        // Switch to the new project
         switchWorkspace(workspaceId, newProjectId);
         
-        return newProjectId; // Return new ID in case it's needed
+        return newProjectId;
     };
 
-    // Update assignee dropdown
     const updateAssigneeDropdown = () => {
         console.log('🔄 Updating assignee dropdown');
         assigneeSelect.innerHTML = '<option value="">Assign to...</option>';
@@ -899,11 +885,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     
-    // Set up drag and drop functionality
     const setupDragAndDrop = () => {
         console.log('🔄 Setting up drag and drop');
         
-        // Add event listeners to the columns
         kanbanBoard.addEventListener('dragover', (e) => {
             e.preventDefault();
             const column = e.target.closest('.task-cards');
@@ -930,7 +914,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             console.log(`🔄 Task ${taskId} dropped into ${newStatus} column`);
             
-            // Update task status
             const project = getCurrentProject();
             if (!project) {
                 console.warn('⚠️ No project found during drag and drop');
@@ -947,7 +930,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     
-    // Event listeners
     addTaskBtn.addEventListener('click', () => {
         console.log('🖱️ Add task button clicked');
         addTask();
@@ -987,7 +969,6 @@ document.addEventListener('DOMContentLoaded', () => {
         addTeamMember();
     });
     
-    // Modal event listeners
     closeModal.addEventListener('click', () => {
         console.log('🖱️ Close modal button clicked');
         closeTaskModal();
@@ -1003,7 +984,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveTaskChanges();
     });
     
-    // Comment functionality
     addCommentBtn.addEventListener('click', () => {
         console.log('🖱️ Add comment button clicked');
         addComment();
@@ -1016,13 +996,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Add assignee button in modal
     addAssigneeBtn.addEventListener('click', () => {
         console.log('🖱️ Add assignee button clicked');
         addTaskAssigneeFromModal();
     });
     
-    // Close modal when clicking outside
     window.addEventListener('click', (e) => {
         if (e.target === taskDetailModal) {
             console.log('🖱️ Clicked outside modal to close');
@@ -1030,18 +1008,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Render workspaces and projects in sidebar
     const renderWorkspaces = () => {
         console.log('🔄 Rendering workspaces');
         workspaceList.innerHTML = '';
         
         workspaces.forEach(workspace => {
-            // Create workspace tree item
             const wsItem = document.createElement('li');
             wsItem.className = 'tree-item workspace-item';
             wsItem.setAttribute('data-id', workspace.id);
             
-            // Determine if workspace is active
             const isActive = workspace.id === activeWorkspace;
             
             wsItem.innerHTML = `
@@ -1076,21 +1051,16 @@ document.addEventListener('DOMContentLoaded', () => {
             workspaceList.appendChild(wsItem);
         });
         
-        // Add event listeners to tree items
         addTreeEventListeners();
         
-        // Update assignee dropdown
         updateAssigneeDropdown();
         
-        // Render team members
         renderTeamMembers();
     };
     
-    // Add event listeners to tree items
-    const addTreeEventListeners = () => {
+    addTreeEventListeners = () => {
         console.log('🔄 Adding tree event listeners');
         
-        // Workspace toggles
         document.querySelectorAll('.workspace-item .tree-toggle').forEach(toggle => {
             toggle.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -1106,7 +1076,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Project toggles
         document.querySelectorAll('.project-item .tree-toggle').forEach(toggle => {
             toggle.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -1122,7 +1091,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Workspace headers
         document.querySelectorAll('.workspace-item .tree-header').forEach(header => {
             header.addEventListener('click', () => {
                 const item = header.closest('.tree-item');
@@ -1137,7 +1105,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Project headers
         document.querySelectorAll('.project-item .tree-header').forEach(header => {
             header.addEventListener('click', () => {
                 const item = header.closest('.tree-item');
@@ -1151,7 +1118,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // New project items
         document.querySelectorAll('.new-project-item').forEach(item => {
             item.addEventListener('click', () => {
                 const parent = item.closest('.tree-children');
@@ -1163,24 +1129,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // New task items
         document.querySelectorAll('.new-task-item').forEach(item => {
             item.addEventListener('click', () => {
                 console.log('🌳 Add new task clicked');
-                // Focus the task input field
                 taskInput.focus();
             });
         });
     };
     
-    // Switch active workspace and project
     const switchWorkspace = (workspaceId, projectId) => {
         console.log(`🔀 Switching to workspace: ${workspaceId}, project: ${projectId}`);
         
         activeWorkspace = workspaceId;
         activeProject = projectId;
         
-        // Update tree view (visual indicators)
         document.querySelectorAll('.tree-header').forEach(header => {
             header.classList.remove('active');
         });
@@ -1189,7 +1151,6 @@ document.addEventListener('DOMContentLoaded', () => {
             item.classList.remove('active');
         });
         
-        // Activate workspace
         const wsItem = document.querySelector(`.workspace-item[data-id="${workspaceId}"]`);
         if (wsItem) {
             const wsHeader = wsItem.querySelector('.tree-header');
@@ -1201,7 +1162,6 @@ document.addEventListener('DOMContentLoaded', () => {
             wsChildren.classList.add('open');
         }
         
-        // Activate project
         const projItem = document.querySelector(`.project-item[data-id="${projectId}"]`);
         if (projItem) {
             const projHeader = projItem.querySelector('.tree-header');
@@ -1209,40 +1169,25 @@ document.addEventListener('DOMContentLoaded', () => {
             projHeader.classList.add('active');
         }
         
-        // Render tasks for the new active project
         renderTasks();
     };
     
-    // Switch between views (Kanban/Task)
     const switchView = (view) => {
         console.log(`🔀 Switching to ${view} view`);
         
         currentView = view;
         
-        // Update view buttons
         kanbanViewBtn.classList.toggle('active', view === 'kanban');
         taskViewBtn.classList.toggle('active', view === 'task');
         
-        // Show/hide view containers
         kanbanView.classList.toggle('active', view === 'kanban');
         taskView.classList.toggle('active', view === 'task');
     };
     
-    // Initialize the app
     console.log('🚀 Initializing app...');
     renderWorkspaces();
     generateKanbanBoard();
     setupDragAndDrop();
     switchView('kanban');
     console.log('✅ App initialized successfully');
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Other initialization code remains the same...
-    
-    // Initialize the first color as selected
-    if (colorOptions && colorOptions.length > 0) {
-        colorOptions[0].classList.add('selected');
-        selectedColor = colorOptions[0].getAttribute('data-color');
-    }
 });
