@@ -38,11 +38,32 @@
                 <div class="header-info">
                     <h2 id="currentWorkspace">Development</h2>
                     <h3 id="currentProject">Website Redesign</h3>
-                </div>
-                
+                </div>     
                 <div class="view-switcher">
                     <button id="kanbanViewBtn" class="view-btn active">Kanban View</button>
                     <button id="taskViewBtn" class="view-btn">Task View</button>
+                    <button id="ganttViewBtn" class="view-btn">Gantt View</button>
+                </div>
+
+                <div id="ganttView" class="view-container">
+                    <div class="gantt-controls">
+                        <div class="zoom-controls">
+                            <button id="zoomOutBtn">-</button>
+                            <span>Zoom</span>
+                            <button id="zoomInBtn">+</button>
+                        </div>
+                        <div class="date-range">
+                            <span id="ganttStartDate">Loading...</span> to <span id="ganttEndDate">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="gantt-container">
+                        <div class="gantt-timeline-header" id="ganttTimelineHeader">
+
+                        </div>
+                        <div class="gantt-chart" id="ganttChart">
+
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="task-input-container">
@@ -203,6 +224,6 @@
     </div>
 </div>
 
-    <script src="app.js"></script>
+    <script type="module" src="index.js"></script>
 </body>
 </html>
