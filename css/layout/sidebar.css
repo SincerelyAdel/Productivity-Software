@@ -1,0 +1,439 @@
+/* ============ SIDEBAR STYLES ============ */
+
+.sidebar {
+    width: 350px !important;
+    background: white;
+    border-right: 1px solid var(--border-color);
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* or 100% if inside a fixed-height parent */
+}
+
+/* Logo */
+.logo h1 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-xl);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Workspace Section */
+.workspace-section h2 {
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.add-workspace {
+    display: flex;
+    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-sm);
+}
+
+.add-workspace input {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+}
+
+.add-workspace button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Treeview */
+.treeview {
+    list-style: none;
+}
+
+.treeview li {
+    margin-bottom: var(--spacing-sm);
+}
+
+.workspace-item {
+    padding: 10px;
+    background: var(--light-bg);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+.workspace-item:hover {
+    background: #e3f2fd;
+}
+
+.workspace-item.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.project-list {
+    margin-left: var(--spacing-lg);
+    margin-top: 10px;
+}
+
+.project-item {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: white;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-xs);
+    cursor: pointer;
+    border-left: 3px solid var(--primary-color);
+    transition: var(--transition-normal);
+}
+
+.project-item:hover {
+    background: #f0f8ff;
+}
+
+.project-item.active {
+    background: #e3f2fd;
+}
+
+/* Team Viewer */
+.team-viewer {
+    margin-top: var(--spacing-xl);
+}
+
+.team-viewer h3 {
+    margin-bottom: 15px;
+    color: var(--text-dark);
+    font-size: 16px;
+}
+
+.team-members-list {
+    margin-bottom: 15px;
+}
+
+.team-member {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.member-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.member-name {
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+#addTeamMemberBtn {
+    width: 100%;
+    padding: var(--spacing-sm);
+    background: transparent;
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: var(--transition-normal);
+}
+
+#addTeamMemberBtn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+
+/* ============ USER PROFILE SECTION STYLES ============ */
+
+/* User Profile Section Container - Fixed at bottom */
+.user-profile-section {
+    margin-top: auto; /* Push to bottom */
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Connection Status Indicator */
+.connection-status {
+    margin-bottom: var(--spacing-md);
+}
+
+.connection-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--light-bg);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    animation: pulse 2s infinite;
+}
+
+/* Connection status variations */
+.connection-indicator.connected .status-dot {
+    background: #2ecc71;
+    animation: none;
+}
+
+.connection-indicator.disconnected .status-dot {
+    background: #e74c3c;
+    animation: blink 1s infinite;
+}
+
+.connection-indicator.connecting .status-dot {
+    background: #f39c12;
+}
+
+.status-text {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.user-profile-plaque {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 10px;
+    border: 2px solid #d1d5db;
+    border-radius: 10px;
+    background-color: #f9fafb;
+}
+
+.profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    flex-grow: 1;
+}
+
+.profile-btn:hover {
+    background: rgba(74, 111, 165, 0.1);
+}
+
+.user-avatar {
+    font-size: 1.5rem;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.user-name {
+    font-weight: 600;
+}
+
+.user-status {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+/* Settings Access */
+.settings-access {
+    flex-shrink: 0;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    transition: var(--transition-normal);
+    border-radius: 8px;
+}
+
+.settings-access:hover {
+    border-color: #2563eb;
+    background: rgba(74, 111, 165, 0.1);
+}
+
+.settings-icon {
+    font-size: 16px;
+    color: var(--text-muted);
+    transition: var(--transition-normal);
+}
+
+.settings-access:hover .settings-icon {
+    color: var(--primary-color);
+}
+
+/* Status variations for user status */
+.user-status.active {
+    color: #2ecc71;
+}
+
+.user-status.away {
+    color: #f39c12;
+}
+
+.user-status.busy {
+    color: #e74c3c;
+}
+
+.user-status.offline {
+    color: var(--text-muted);
+}
+
+/* Animations */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0.3;
+    }
+}
+
+/* Responsive adjustments for smaller sidebars */
+@media (max-width: 768px) {
+    .user-profile-plaque {
+        padding: var(--spacing-sm);
+    }
+    
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .user-icon {
+        font-size: 14px;
+    }
+    
+    .user-name {
+        font-size: 13px;
+    }
+    
+    .user-status {
+        font-size: 11px;
+    }
+}
+
+.settings-access {
+    cursor: pointer !important;
+    transition: all 0.2s ease;
+}
+
+.settings-access:hover {
+    background: rgba(74, 111, 165, 0.1) !important;
+    /* transform: scale(1.1); */
+}
+
+.add-workflow-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    color: #6c757d;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.add-workflow-btn:hover {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-color: #2196f3;
+    color: #1976d2;
+    /* transform: translateY(-2px); */
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+}
+
+.add-workflow-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(33, 150, 243, 0.3);
+}
+
+.add-workflow-btn::before {
+    content: '+';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: #6c757d;
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 8px;
+    transition: all 0.3s ease;
+}
+
+.add-workflow-btn:hover::before {
+    background: #1976d2;
+    /* transform: rotate(90deg); */
+}
+
+/* Alternative version with icon instead of text + */
+.add-workflow-btn-alt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    margin: 8px 0;
+    background: rgba(33, 150, 243, 0.1);
+    border: 1px solid rgba(33, 150, 243, 0.3);
+    border-radius: 20px;
+    color: #1976d2;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.add-workflow-btn-alt:hover {
+    background: rgba(33, 150, 243, 0.15);
+    border-color: #2196f3;
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.15);
+}
+
+.add-workflow-btn-alt::before {
+    content: '⚡';
+    font-size: 14px;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
+}
+

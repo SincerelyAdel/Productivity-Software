@@ -1,0 +1,191 @@
+/* ============ RESPONSIVE DESIGN ============ */
+
+/* Large screens - adjust detailed task view columns */
+@media (max-width: 1200px) {
+    .detailed-task-content {
+        grid-template-columns: 300px 1fr 300px;
+    }
+}
+
+/* Medium screens - stack detailed task view */
+@media (max-width: 968px) {
+    .detailed-task-content {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+    
+    .subtasks-container,
+    .task-info-container,
+    .chat-container {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .chat-container {
+        border-bottom: none;
+    }
+    
+    .dates-row,
+    .status-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mobile and tablet */
+@media (max-width: 768px) {
+    /* App layout */
+    .app-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        order: 2;
+    }
+    
+    .main-content {
+        order: 1;
+    }
+    
+    /* Modal adjustments */
+    .modal-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Kanban adjustments */
+    .kanban-board {
+        flex-direction: column;
+    }
+    
+    .kanban-column {
+        min-width: auto;
+    }
+    
+    /* Gantt adjustments */
+    .timeline-header-cell {
+        min-width: 60px;
+    }
+    
+    .gantt-task-label {
+        display: none;
+    }
+    
+    /* Detailed task view adjustments */
+    .detailed-task-header {
+        padding: 15px;
+    }
+    
+    .subtasks-section,
+    .task-info-section {
+        padding: 15px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+}
+
+/* Small mobile screens */
+@media (max-width: 640px) {
+    /* Reduce padding on small screens */
+    .view-container {
+        padding: 15px;
+    }
+    
+    .detailed-task-header {
+        padding: 15px;
+    }
+    
+    .subtasks-section,
+    .task-info-section {
+        padding: 15px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    /* Adjust font sizes */
+    .task-title-input {
+        font-size: 20px;
+    }
+    
+    /* Stack form elements */
+    .dates-row,
+    .status-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    /* Adjust modal size */
+    .modal-content {
+        width: 95%;
+        padding: var(--spacing-lg);
+    }
+    
+    /* Header adjustments */
+    .header-info h2 {
+        font-size: 20px;
+    }
+    
+    .header-info h3 {
+        font-size: 16px;
+    }
+    
+    .view-switcher {
+        flex-wrap: wrap;
+    }
+    
+    .task-input-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .task-input-container select,
+    .task-input-container button {
+        width: 100%;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    /* Further reduce spacing */
+    .view-container {
+        padding: 10px;
+    }
+    
+    .sidebar {
+        padding: 15px;
+    }
+    
+    .board-header {
+        padding: 15px;
+    }
+    
+    /* Adjust kanban columns */
+    .kanban-column {
+        min-width: auto;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    /* Stack view buttons */
+    .view-switcher {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .view-btn {
+        text-align: center;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Adjust shadow and border rendering for retina displays */
+    .task-card,
+    .kanban-column,
+    .modal-content {
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+}

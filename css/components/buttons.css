@@ -1,0 +1,141 @@
+/* ============ BUTTON COMPONENTS ============ */
+
+/* Base button styles */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    line-height: 1;
+}
+
+/* Primary button */
+.btn-primary, .primary-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover, .primary-btn:hover {
+    background: #3a5998;
+}
+
+/* Success button */
+.btn-success {
+    background: var(--success-color);
+    color: white;
+}
+
+.btn-success:hover {
+    background: #27ae60;
+}
+
+/* Warning button */
+.btn-warning {
+    background: var(--warning-color);
+    color: white;
+}
+
+.btn-warning:hover {
+    background: #e67e22;
+}
+
+/* Danger button */
+.btn-danger, .danger-btn {
+    background: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover, .danger-btn:hover {
+    background: #c0392b;
+}
+
+/* Secondary button */
+.btn-secondary {
+    background: transparent;
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--light-bg);
+}
+
+/* Small button */
+.btn-sm, .small-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 12px;
+}
+
+/* Large button */
+.btn-lg {
+    padding: 15px 24px;
+    font-size: 16px;
+}
+
+/* Dashed button */
+.small-btn {
+    border: 1px dashed var(--border-color);
+    background: transparent;
+    color: var(--text-muted);
+}
+
+.small-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Back button */
+.back-btn {
+    background: var(--primary-color);
+    color: white;
+    padding: 10px var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: var(--transition-normal);
+}
+
+.back-btn:hover {
+    background: #3a5998;
+}
+
+/* Timer button */
+.timer-btn {
+    background: var(--warning-color);
+    color: white;
+    padding: 10px var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: var(--transition-normal);
+}
+
+.timer-btn:hover {
+    background: #e67e22;
+}
+
+.timer-btn.active {
+    background: var(--danger-color);
+}
+
+/* Button with icon */
+.btn-icon {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Disabled state */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+    transform: none;
+}

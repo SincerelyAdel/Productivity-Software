@@ -1,0 +1,55 @@
+/* ============ TASK LIST VIEW ============ */
+
+.task-list-view {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.task-table th {
+    background: var(--light-bg);
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.task-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.task-table tr:hover {
+    background: #fafafa;
+}
+
+/* No tasks state */
+.no-tasks {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--text-muted);
+    font-size: 18px;
+}
+
+.task-table-scroll-wrapper {
+    max-height: 600px; /* or use: height: 100%; for full panel */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Optional: Sticky table header */
+.task-table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--light-bg);
+    z-index: 2;
+}

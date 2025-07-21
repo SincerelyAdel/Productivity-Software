@@ -1,0 +1,53 @@
+/* ============ CSS CUSTOM PROPERTIES ============ */
+
+:root {
+    /* Primary Colors */
+    --primary-color: #4a6fa5;
+    --secondary-color: #2c3e50;
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --danger-color: #e74c3c;
+    
+    /* Background Colors */
+    --light-bg: #f8f9fa;
+    --white-bg: #ffffff;
+    
+    /* Border and Lines */
+    --border-color: #e1e8ed;
+    --task-border: #ddd;
+    
+    /* Text Colors */
+    --text-dark: #2c3e50;
+    --text-muted: #6c757d;
+    --light-text: #666;
+    
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 20px;
+    --spacing-xl: 30px;
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.05);
+    --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-xl: 0 20px 60px rgba(0,0,0,0.3);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.2s ease;
+    --transition-slow: 0.3s ease;
+    
+    /* Z-index */
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-modal: 1000;
+    --z-tooltip: 1100;
+}

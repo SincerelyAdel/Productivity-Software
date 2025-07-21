@@ -1,0 +1,141 @@
+/* Backend Integration Styles */
+
+/* Connection status */
+.connection-status {
+    padding: 10px;
+    border-top: 1px solid #eee;
+    margin-top: auto;
+}
+
+.connection-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #95a5a6;
+    animation: pulse 2s infinite;
+}
+
+.status-dot.connected {
+    background: #2ecc71;
+    animation: none;
+}
+
+.status-dot.error {
+    background: #e74c3c;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Error modal styles */
+.error-modal .modal-content {
+    border-left: 4px solid #e74c3c;
+}
+
+.error-modal h2 {
+    color: #e74c3c;
+}
+
+.error-modal code {
+    background: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 90%;
+}
+
+.error-modal ul {
+    text-align: left;
+    margin: 15px 0;
+}
+
+.error-modal li {
+    margin: 5px 0;
+}
+
+/* Loading states */
+.view-container.loading::after {
+    content: 'Loading...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: #666;
+    z-index: 100;
+}
+
+.sidebar .loading-indicator {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Optimistic update styles */
+.task-card.creating {
+    opacity: 0.7;
+    border: 2px dashed #4a6fa5;
+}
+
+.task-card.updating {
+    opacity: 0.8;
+    filter: brightness(0.95);
+}
+
+.task-card.error {
+    border-left: 4px solid #e74c3c;
+    background: #fff5f5;
+}
+
+/* Connection status styles */
+.connection-status.offline {
+    background: #fff3cd;
+    border-top-color: #f39c12;
+}
+
+.connection-status.offline .status-text {
+    color: #856404;
+}
+
+/* Backend sync indicators */
+.sync-indicator {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #4a6fa5;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    z-index: 1000;
+    display: none;
+}
+
+.sync-indicator.syncing {
+    display: block;
+    animation: pulse 1.5s infinite;
+}
+
+.sync-indicator.success {
+    background: #2ecc71;
+    display: block;
+    animation: none;
+}
+
+.sync-indicator.error {
+    background: #e74c3c;
+    display: block;
+    animation: none;
+}

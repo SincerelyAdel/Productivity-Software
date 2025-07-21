@@ -1,0 +1,32 @@
+/* ============ APP LAYOUT ============ */
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Main content area */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* View containers */
+.view-container {
+    flex: 1;
+    padding: var(--spacing-lg);
+    overflow: auto;
+    display: none;
+}
+
+.view-container.active {
+    display: block;
+}
+
+/* Special handling for detailed task view */
+#detailedTaskView.view-container.active {
+    display: flex;
+}

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9ecef;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1a365d;
+            font-size: 2.5em;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-container {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #718096;
+            font-size: 18px;
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .filter-select:focus {
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        .file-count {
+            color: #718096;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #1a365d;
+            color: white;
+            padding: 18px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        th:first-child {
+            border-radius: 15px 0 0 0;
+        }
+
+        th:last-child {
+            border-radius: 0 15px 0 0;
+        }
+
+        td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        tr:hover td {
+            background-color: #ebf8ff;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:last-child td:first-child {
+            border-radius: 0 0 0 15px;
+        }
+
+        tr:last-child td:last-child {
+            border-radius: 0 0 15px 0;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #1a365d;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .ext-pdf { background: #1a365d; }
+        .ext-doc { background: #3182ce; }
+        .ext-docx { background: #3182ce; }
+        .ext-xls { background: #38a169; }
+        .ext-xlsx { background: #38a169; }
+        .ext-ppt { background: #dd6b20; }
+        .ext-pptx { background: #dd6b20; }
+        .ext-jpg { background: #805ad5; }
+        .ext-jpeg { background: #805ad5; }
+        .ext-png { background: #805ad5; }
+        .ext-gif { background: #805ad5; }
+        .ext-mp4 { background: #d53f8c; }
+        .ext-mp3 { background: #d69e2e; }
+        .ext-zip { background: #718096; }
+        .ext-txt { background: #4a5568; }
+
+        .extension {
+            display: inline-block;
+            background: #ebf8ff;
+            color: #1a365d;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            border: 1px solid #bee3f8;
+        }
+
+        .size {
+            color: #718096;
+            font-family: 'Courier New', monospace;
+        }
+
+        .download-btn {
+            background: #1a365d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .download-btn:hover {
+            background: #2c5282;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 54, 93, 0.3);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+            font-size: 16px;
+        }
+
+        .no-results-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-container {
+                min-width: auto;
+            }
+            
+            .filter-container {
+                justify-content: center;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 12px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>File Manager</h1>
+        
+        <div class="controls">
+            <div class="search-container">
+                <div class="search-icon"></div>
+                <input type="text" class="search-input" placeholder="Search files..." id="searchInput">
+            </div>
+            
+            <div class="filter-container">
+                <select class="filter-select" id="extensionFilter">
+                    <option value="">All Extensions</option>
+                </select>
+                <div class="file-count" id="fileCount">24 files</div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="fileTable">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Extension</th>
+                        <th>Size</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="fileTableBody">
+                    <!-- Files will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Sample file data
+        const files = [
+            { name: "Project_Proposal_2024", extension: "pdf", size: "2.5 MB" },
+            { name: "Financial_Report_Q3", extension: "xlsx", size: "1.8 MB" },
+            { name: "Marketing_Strategy", extension: "pptx", size: "5.2 MB" },
+            { name: "Employee_Handbook", extension: "docx", size: "3.1 MB" },
+            { name: "Budget_Analysis", extension: "xls", size: "890 KB" },
+            { name: "Company_Logo", extension: "png", size: "245 KB" },
+            { name: "Team_Photo", extension: "jpg", size: "1.2 MB" },
+            { name: "Product_Demo", extension: "mp4", size: "15.7 MB" },
+            { name: "Meeting_Notes", extension: "txt", size: "12 KB" },
+            { name: "Training_Manual", extension: "pdf", size: "4.6 MB" },
+            { name: "Sales_Data", extension: "xlsx", size: "2.1 MB" },
+            { name: "Client_Presentation", extension: "pptx", size: "8.3 MB" },
+            { name: "Contract_Template", extension: "docx", size: "567 KB" },
+            { name: "Website_Mockup", extension: "png", size: "1.9 MB" },
+            { name: "Background_Music", extension: "mp3", size: "3.4 MB" },
+            { name: "Archive_Backup", extension: "zip", size: "25.8 MB" },
+            { name: "Annual_Report", extension: "pdf", size: "6.2 MB" },
+            { name: "Inventory_List", extension: "xlsx", size: "1.5 MB" },
+            { name: "Brand_Guidelines", extension: "pdf", size: "2.8 MB" },
+            { name: "Customer_Survey", extension: "docx", size: "1.1 MB" },
+            { name: "Product_Catalog", extension: "pdf", size: "7.9 MB" },
+            { name: "Database_Schema", extension: "txt", size: "45 KB" },
+            { name: "Social_Media_Kit", extension: "zip", size: "12.3 MB" },
+            { name: "Onboarding_Video", extension: "mp4", size: "32.1 MB" }
+        ];
+
+        let filteredFiles = [...files];
+
+        // Get unique extensions and populate filter
+        function populateExtensionFilter() {
+            const extensions = [...new Set(files.map(file => file.extension))].sort();
+            const filterSelect = document.getElementById('extensionFilter');
+            
+            extensions.forEach(ext => {
+                const option = document.createElement('option');
+                option.value = ext;
+                option.textContent = ext.toUpperCase();
+                filterSelect.appendChild(option);
+            });
+        }
+
+        // Create file icon
+        function createFileIcon(extension) {
+            const icon = document.createElement('div');
+            icon.className = `file-icon ext-${extension}`;
+            icon.textContent = extension.toUpperCase().substring(0, 3);
+            return icon;
+        }
+
+        // Format file size for display
+        function formatFileSize(size) {
+            return size;
+        }
+
+        // Render table
+        function renderTable() {
+            const tbody = document.getElementById('fileTableBody');
+            tbody.innerHTML = '';
+
+            if (filteredFiles.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="no-results">
+                            <div class="no-results-icon">📄</div>
+                            <div>No files found matching your criteria</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filteredFiles.forEach(file => {
+                const row = document.createElement('tr');
+                
+                const nameCell = document.createElement('td');
+                nameCell.className = 'file-name';
+                nameCell.appendChild(createFileIcon(file.extension));
+                nameCell.appendChild(document.createTextNode(file.name));
+                
+                const extCell = document.createElement('td');
+                extCell.innerHTML = `<span class="extension">${file.extension}</span>`;
+                
+                const sizeCell = document.createElement('td');
+                sizeCell.className = 'size';
+                sizeCell.textContent = formatFileSize(file.size);
+                
+                const actionCell = document.createElement('td');
+                const downloadBtn = document.createElement('button');
+                downloadBtn.className = 'download-btn';
+                downloadBtn.innerHTML = 'Download';
+                downloadBtn.onclick = () => downloadFile(file);
+                actionCell.appendChild(downloadBtn);
+                
+                row.appendChild(nameCell);
+                row.appendChild(extCell);
+                row.appendChild(sizeCell);
+                row.appendChild(actionCell);
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Download file function
+        function downloadFile(file) {
+            alert(`Downloading: ${file.name}.${file.extension} (${file.size})`);
+        }
+
+        // Filter files
+        function filterFiles() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const selectedExtension = document.getElementById('extensionFilter').value;
+            
+            filteredFiles = files.filter(file => {
+                const matchesSearch = file.name.toLowerCase().includes(searchTerm);
+                const matchesExtension = selectedExtension === '' || file.extension === selectedExtension;
+                return matchesSearch && matchesExtension;
+            });
+            
+            renderTable();
+            updateFileCount();
+        }
+
+        // Update file count
+        function updateFileCount() {
+            const count = filteredFiles.length;
+            const fileCount = document.getElementById('fileCount');
+            fileCount.textContent = `${count} file${count !== 1 ? 's' : ''}`;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            populateExtensionFilter();
+            renderTable();
+            updateFileCount();
+            
+            // Add event listeners
+            document.getElementById('searchInput').addEventListener('input', filterFiles);
+            document.getElementById('extensionFilter').addEventListener('change', filterFiles);
+        });
+    </script>
+</body>
+</html>

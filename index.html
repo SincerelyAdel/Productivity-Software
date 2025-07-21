@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        if (!sessionStorage.getItem("access_token")) {      
+        window.location.href = "login.html";
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkspaceFlow - Productivity App</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
     <div class="app-container">
+        <!-- Updated Sidebar with User Profile -->
         <aside class="sidebar">
             <div class="logo">
                 <h1>WorkspaceFlow</h1>
@@ -21,30 +27,86 @@
                 </div>
                 
                 <ul id="workspaceList" class="treeview">
-
+                    <!-- Workspaces will be populated here from backend -->
                 </ul>
             </div>
+            
             <div class="team-viewer">
                 <h3>Team Members</h3>
                 <div id="teamMembers" class="team-members-list">
-
+                    <!-- Team members will be populated here from backend -->
                 </div>
                 <button id="addTeamMemberBtn">Add Member</button>
+            </div>
+
+            <!-- User Profile Section (Fixed at Bottom) -->
+            <div class="user-profile-section">
+                <div id="userProfilePlaque" class="user-profile-plaque">
+                    <!-- New Profile Button -->
+                    <button id="profileViewBtn" class="profile-btn">
+                        <div class="assignee-avatar" style="background-color: #4a6fa5; position: relative; overflow: hidden;">
+                            <img id="userAvatarImg" 
+                                alt="John Doe"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                                style="display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                            <span style="display: none; color: #ffffff; font-weight: bold;">
+                                JD
+                            </span>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name" id="currentUserName">John Doe</div>
+                            <div class="user-status">Active</div>
+                        </div>
+                    </button>
+
+                    <!-- Existing Settings Button (unchanged) -->
+                    <div class="settings-access">
+                        <button id="settingsViewBtn" class="settings-btn">
+                            <span class="settings-icon">⚙️</span>
+                            <span class="settings-text">Settings</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </aside>
         
         <main class="main-content">
+            <!-- Header that will be hidden when detailed task view is active -->
             <header class="board-header">
                 <div class="header-info">
-                    <h2 id="currentWorkspace">Development</h2>
-                    <h3 id="currentProject">Website Redesign</h3>
+                    <h2 id="currentWorkspace">Loading...</h2>
+                    <h3 id="currentProject">Loading...</h3>
                 </div>     
+                
                 <div class="view-switcher">
                     <button id="kanbanViewBtn" class="view-btn active">Kanban View</button>
                     <button id="taskViewBtn" class="view-btn">Task View</button>
-                    <button id="ganttViewBtn" class="view-btn">Gantt View</button>
+                    <!-- <button id="ganttViewBtn" class="view-btn">Gantt View</button> -->
                 </div>
-
+                
+                <div class="task-input-container">
+                    <input type="text" id="taskInput" placeholder="Add a new task...">
+                    <select id="assigneeSelect">
+                        <option value="">Loading assignees...</option>
+                    </select>
+                    <button id="addTaskBtn">Add Task</button>
+                </div>
+            </header>
+            
+            <!-- Content area that adjusts based on header visibility -->
+            <div class="content-area">
+                <div id="kanbanView" class="view-container active">
+                    <div class="kanban-board" id="kanbanBoard">
+                        <!-- Kanban columns will be populated here -->
+                    </div>
+                </div>
+                
+                <div id="taskView" class="view-container">
+                    <div class="task-list-view" id="taskListView">
+                        <!-- Task list will be populated here -->
+                    </div>
+                </div>
+                
                 <div id="ganttView" class="view-container">
                     <div class="gantt-controls">
                         <div class="zoom-controls">
@@ -58,51 +120,459 @@
                     </div>
                     <div class="gantt-container">
                         <div class="gantt-timeline-header" id="ganttTimelineHeader">
-
+                            <!-- Timeline header will be populated here -->
                         </div>
                         <div class="gantt-chart" id="ganttChart">
-
+                            <!-- Gantt chart content will be populated here -->
                         </div>
                     </div>
                 </div>
-                
-                <div class="task-input-container">
-                    <input type="text" id="taskInput" placeholder="Add a new task...">
-                    <select id="assigneeSelect">
-                        <option value="">Assign to...</option>
-                    </select>
-                    <button id="addTaskBtn">Add Task</button>
-                </div>
-            </header>
-            
-            <div id="kanbanView" class="view-container active">
-                <div class="kanban-board" id="kanbanBoard">
 
-                </div>
-            </div>
-            
-            <div id="taskView" class="view-container">
-                <div class="task-list-view" id="taskListView">
+                <!-- Full-Height Detailed Task View -->
+                <div id="detailedTaskView" class="view-container detailed-task-view-full">
+                    <!-- Header with back button and task status -->
+                    <div class="detailed-task-header-full">
+                        <button id="backToViewBtn" class="back-btn-full">
+                            <span class="back-icon">←</span>
+                            <span>Back</span>
+                        </button>
+                        <div class="task-status-display-full">
+                            <span id="taskStatusBadge" class="status-badge">Loading...</span>
+                        </div>
+                    </div>
 
+                    <!-- Main 3-column content area -->
+                    <div class="detailed-task-content-full">
+                        
+                        <!-- LEFT COLUMN: Subtasks -->
+                        <div class="subtasks-container-full">
+                            <div class="section-header-full">
+                                <h3>Subtasks</h3>
+                                <span id="subtaskProgress" class="progress-indicator">0/0</span>
+                            </div>
+                            
+                            <div class="subtasks-section-full">
+                                <div class="add-subtask-form">
+                                    <input type="text" id="newSubtaskInput" placeholder="Add a new subtask..." />
+                                    <button id="addSubtaskBtn">Add</button>
+                                </div>
+                                
+                                <div id="subtasksList" class="subtasks-list">
+                                    <!-- Subtasks will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- MIDDLE COLUMN: Task Information -->
+                        <div class="task-info-container-full">
+                            <div class="section-header-full">
+                                <h3 id="taskTitle"></h3>
+                                    <div class="info-group">
+                                        <select id="taskStatusSelect" class="status-select">
+                                            <option value="not_started">Not Started</option>
+                                            <option value="in_progress">In Progress</option>
+                                            <option value="under_review">Under Review</option>
+                                            <option value="completed">Completed</option>
+                                            <option value="on_hold">On Hold</option>
+                                        </select>
+                                    </div>
+                            </div>
+                            
+                            <div class="task-info-section-full">
+                                
+                                <!-- Task Description -->
+                                <div class="info-group description-dates-row">
+                                    <div>
+                                        <label>Description</label>
+                                        <textarea id="taskDescription" class="task-description" placeholder="Describe the task..."></textarea>
+                                    </div>
+                                    <div class="dates-stack">
+                                        <div class="info-group">
+                                            <label>Start Date</label>
+                                            <input type="date" id="taskStartDate" class="date-input" />
+                                        </div>
+                                        <div class="info-group">
+                                            <label>End Date</label>
+                                            <input type="date" id="taskEndDate" class="date-input" />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Status and Progress -->
+                                <div class="status-row">
+                                    <div class="info-group">
+                                        <label>Progress</label>
+                                        <div class="progress-display">
+                                            <div class="progress-bar">
+                                                <div id="taskProgressBar" class="progress-fill"></div>
+                                            </div>
+                                            <span id="taskProgressText">0%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Time Tracking -->
+                                <div class="time-tracking-section">
+                                    <div class="info-group">
+                                        <label>Time Spent</label>
+                                        <div class="time-display">
+                                            <span id="timeSpent" class="time-counter">00:00:00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Assignees -->
+                                <div class="info-group">
+                                    <label>Assignees</label>
+                                    <div id="taskAssignees" class="assignees-list">
+                                        <!-- Assignees will be populated here -->
+                                    </div>
+
+                                    <select id="assigneeDropdown" style="min-width: 180px;">
+                                        <option value="" disabled selected>Add assignee...</option>
+                                        <!-- Populated dynamically -->
+                                    </select>
+                                    <label>Files</label>
+                                </div>
+
+                                <div class="controls">
+                                    <div class="search-container">
+                                        <div class="search-icon"></div>
+                                        <input type="text" class="search-input" placeholder="Search files..." id="searchInput">
+                                    </div>
+                                    
+                                    <div class="filter-container">
+                                        <select class="filter-select" id="extensionFilter">
+                                            <option value="">All Extensions</option>
+                                        </select>
+                                        <div class="file-count" id="fileCount">0 files</div>
+                                    </div>
+                                </div>
+
+                                <div class="table-container">
+                                    <table id="fileTable">
+                                        <thead>
+                                            <tr>
+                                                <th>File Name</th>
+                                                <th>File Extension</th>
+                                                <th>Uploaded By</th>
+                                                <th>File Size</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="fileTableBody">
+                                            <!-- Files will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <label>Activity Log</label>
+                                <div class="log-controls">
+                                    <div class="search-container">
+                                        <div class="search-icon"></div>
+                                        <input type="text" class="search-input" placeholder="Search activity..." id="logSearchInput">
+                                    </div>
+                                    
+                                    <div class="filter-container">
+                                        <select class="filter-select" id="logTypeFilter">
+                                            <option value="">All Activities</option>
+                                            <option value="task_created">Task Created</option>
+                                            <option value="task_updated">Task Updated</option>
+                                            <option value="status_changed">Status Changed</option>
+                                            <option value="assignee_added">Assignee Added</option>
+                                            <option value="assignee_removed">Assignee Removed</option>
+                                            <option value="subtask_added">Subtask Added</option>
+                                            <option value="subtask_completed">Subtask Completed</option>
+                                            <option value="comment_added">Comment Added</option>
+                                            <option value="file_uploaded">File Uploaded</option>
+                                        </select>
+                                        <div class="log-count" id="logCount">0 activities</div>
+                                    </div>
+                                </div>
+
+                                <div class="table-container log-table-container">
+                                    <table id="logTable">
+                                        <colgroup>
+                                            <col>  <!-- Action: 120px -->
+                                            <col>  <!-- Details: auto -->
+                                            <col>  <!-- User: 80px -->
+                                            <col>  <!-- Time: 90px -->
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>Action</th>
+                                                <th>Details</th>
+                                                <th>User</th>
+                                                <th>Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="logTableBody">
+                                            <!-- Activity log will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                                                
+                                <!-- Task Statistics -->
+                                <div class="task-stats">
+                                    <div class="stat-item">
+                                        <span>Created:</span>
+                                        <span id="taskCreated">-</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span>Last Updated:</span>
+                                        <span id="taskUpdated">-</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span>Subtasks Completed:</span>
+                                        <span id="subtaskStats">0/0</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="action-buttons">
+                                    <button id="saveTaskBtn" class="primary-btn">Save Changes</button>
+                                    <button id="deleteTaskBtn" class="danger-btn">Delete Task</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        <!-- RIGHT COLUMN: Chat/Comments -->
+                        <div class="chat-container-full">
+                            <div class="section-header-full">
+                                <h3>Discussion</h3>
+                                <span id="messageCount" class="message-count">0 messages</span>
+                            </div>
+
+                            <div class="chat-section-full">
+                                <div id="chatMessages" class="chat-messages">
+                                    <div class="no-messages">
+                                        <div>No messages yet</div>
+                                        <div>Start the conversation!</div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-input-section">
+                                    <form id="chatForm">
+                                        <div class="chat-input-container">
+                                            <textarea id="chatInput" placeholder="Type a message..." rows="1"></textarea>
+
+                                            <div class="file-input-wrapper">
+                                                <div class="file-input-btn">📋</div>
+                                                <input type="file" id="fileInput" />
+                                            </div>
+
+                                            <button type="submit" id="sendMessageBtn">Send</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div id="settingsView" class="view-container">
+                    <div class="settings-header">
+                        <button id="backFromSettingsBtn" class="back-btn">← Back</button>
+                        <h1>⚙️ Settings</h1>
+                    </div>
+
+                    <div class="settings-content">
+                        <div class="settings-grid">
+                            
+                            <!-- Left Column: Status Templates -->
+                            <div class="settings-section">
+                                <div class="section-header">
+                                    <h3>📋 Status Templates</h3>
+                                    <span class="section-description">Choose how task statuses are displayed</span>
+                                </div>
+                                
+                                <div class="settings-group">
+                                    <label>Select Status Template:</label>
+                                    <select id="statusTemplateSelect" class="settings-select">
+                                        <option value="default">Default (Business)</option>
+                                        <option value="agile">Agile Development</option>
+                                        <option value="creative">Creative project</option>
+                                        <option value="manufacturing">Manufacturing</option>
+                                        <option value="academic">Academic Research</option>
+                                        <option value="simple">Simple (3 Status)</option>
+                                    </select>
+                                    
+                                    <div class="template-preview">
+                                        <h4>Preview:</h4>
+                                        <div id="statusPreview" class="status-preview-list">
+                                            <!-- Status badges will be populated here -->
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="template-description">
+                                        <p id="templateDescription">Standard business project with comprehensive status tracking.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column: User Experience Settings -->
+                            <div class="settings-section">
+                                <div class="section-header">
+                                    <h3>🎨 User Experience</h3>
+                                    <span class="section-description">Customize your workspace</span>
+                                </div>
+                                
+                                <!-- Theme Settings -->
+                                <div class="settings-group">
+                                    <label>Color Theme:</label>
+                                    <div class="theme-options">
+                                        <button class="theme-option active" data-theme="default">
+                                            <div class="theme-preview default-theme"></div>
+                                            <span>Default Blue</span>
+                                        </button>
+                                        <button class="theme-option" data-theme="green">
+                                            <div class="theme-preview green-theme"></div>
+                                            <span>Nature Green</span>
+                                        </button>
+                                        <button class="theme-option" data-theme="purple">
+                                            <div class="theme-preview purple-theme"></div>
+                                            <span>Royal Purple</span>
+                                        </button>
+                                        <button class="theme-option" data-theme="orange">
+                                            <div class="theme-preview orange-theme"></div>
+                                            <span>Sunset Orange</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- View Preferences -->
+                                <div class="settings-group">
+                                    <label>Default View:</label>
+                                    <select id="defaultViewSelect" class="settings-select">
+                                        <option value="kanban">Kanban Board</option>
+                                        <option value="taskView">Task List</option>
+                                        <option value="ganttView">Gantt Chart</option>
+                                    </select>
+                                </div>
+
+                                <!-- Notification Settings -->
+                                <div class="settings-group">
+                                    <label>Notifications:</label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="notifyTaskUpdates" checked>
+                                            <span class="checkmark"></span>
+                                            Task updates
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="notifyComments" checked>
+                                            <span class="checkmark"></span>
+                                            New comments
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="notifyDeadlines" checked>
+                                            <span class="checkmark"></span>
+                                            Deadline reminders
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="autoSaveNotify">
+                                            <span class="checkmark"></span>
+                                            Auto-save confirmations
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Performance Settings -->
+                                <div class="settings-group">
+                                    <label>Performance:</label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="enableAnimations" checked>
+                                            <span class="checkmark"></span>
+                                            Enable animations
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="autoRefresh" checked>
+                                            <span class="checkmark"></span>
+                                            Auto-refresh data
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="compactMode">
+                                            <span class="checkmark"></span>
+                                            Compact mode
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Section: Data Management -->
+                        <div class="settings-section full-width">
+                            <div class="section-header">
+                                <h3>💾 Data Management</h3>
+                                <span class="section-description">Manage your workspace data</span>
+                            </div>
+                            
+                            <div class="data-management-grid">
+                                <div class="data-action">
+                                    <h4>Export Data</h4>
+                                    <p>Download all your tasks, projects, and settings</p>
+                                    <button id="exportDataBtn" class="action-btn primary">📤 Export All Data</button>
+                                </div>
+                                
+                                <div class="data-action">
+                                    <h4>Import Data</h4>
+                                    <p>Upload and restore from a backup file</p>
+                                    <input type="file" id="importDataInput" accept=".json" style="display: none;">
+                                    <button id="importDataBtn" class="action-btn secondary">📥 Import Data</button>
+                                </div>
+                                
+                                <div class="data-action">
+                                    <h4>Sync with Backend</h4>
+                                    <p>Force synchronization with server</p>
+                                    <button id="syncDataBtn" class="action-btn info">🔄 Sync Now</button>
+                                </div>
+                                
+                                <div class="data-action">
+                                    <h4>Clear Cache</h4>
+                                    <p>Clear local cache and reload from server</p>
+                                    <button id="clearCacheBtn" class="action-btn warning">🗑️ Clear Cache</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Save/Cancel Actions -->
+                        <div class="settings-actions">
+                            <button id="saveSettingsBtn" class="primary-btn">💾 Save Settings</button>
+                            <button id="cancelSettingsBtn" class="secondary-btn">❌ Cancel</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
         
+        <!-- Task Detail Modal -->
         <div id="taskDetailModal" class="modal">
             <div class="modal-content">
                 <span class="close-modal">&times;</span>
-                <h2 id="modalTaskTitle">Task Title</h2>
+                <div class="form-group">
+                    <label for="modalTaskTitle">Task Title</label>
+                    <input type="text" id="modalTaskTitle" placeholder="Enter task title...">
+                </div>
                 
                 <div class="modal-grid">
                     <div class="modal-col">
                         <div class="form-group">
-                            <label>Description</label>
-                            <textarea id="taskDescription"></textarea>
+                            <label for="modaltaskDescription">Description</label>
+                            <textarea id="modaltaskDescription"></textarea>
                         </div>
                         
                         <div class="form-group">
                             <label>Status</label>
-                            <select id="taskStatus"></select>
+                            <select id="taskStatus">
+                                <option value="not_started">Not Started</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="under_review">Under Review</option>
+                                <option value="completed">Completed</option>
+                                <option value="on_hold">On Hold</option>
+                            </select>
                         </div>
                     </div>
                     
@@ -135,95 +605,104 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- HTML Updates for Team Member Modal and Layout Changes -->
 
-<!-- 1. Add Team Member Modal HTML (add this before the closing body tag) -->
-<div id="teamMemberModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal" id="closeTeamModal">&times;</span>
-        <h2>Add Team Member</h2>
-        
-        <div class="form-group">
-            <label for="memberName">Name</label>
-            <input type="text" id="memberName" placeholder="Enter team member name">
-        </div>
-        
-        <div class="form-group">
-            <label>Color</label>
-            <div class="color-picker">
-                <div class="color-option" data-color="#4a6fa5" style="background-color: #4a6fa5;"></div>
-                <div class="color-option" data-color="#e74c3c" style="background-color: #e74c3c;"></div>
-                <div class="color-option" data-color="#2ecc71" style="background-color: #2ecc71;"></div>
-                <div class="color-option" data-color="#f39c12" style="background-color: #f39c12;"></div>
-                <div class="color-option" data-color="#9b59b6" style="background-color: #9b59b6;"></div>
-                <div class="color-option" data-color="#1abc9c" style="background-color: #1abc9c;"></div>
-            </div>
-        </div>
-        
-        <div class="modal-actions">
-            <button id="saveTeamMemberBtn" class="primary-btn">Add Member</button>
-            <button id="cancelTeamMemberBtn">Cancel</button>
-        </div>
-    </div>
-</div>
-<!-- Project Modal HTML -->
-<div id="projectModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal" id="closeProjectModal">&times;</span>
-        <h2>Add New Project</h2>
-        
-        <div class="form-group">
-            <label for="projectNameInput">Project Name</label>
-            <input type="text" id="projectNameInput" placeholder="Enter project name">
-        </div>
-        
-        <div class="form-group">
-            <label for="projectDescriptionInput">Description</label>
-            <textarea id="projectDescriptionInput" placeholder="Describe the project goals and scope"></textarea>
-        </div>
-        
-        <div class="form-grid">
-            <div class="form-group">
-                <label for="projectStartDateInput">Start Date</label>
-                <input type="date" id="projectStartDateInput">
-            </div>
-            
-            <div class="form-group">
-                <label for="projectEndDateInput">Target End Date</label>
-                <input type="date" id="projectEndDateInput">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="projectPrioritySelect">Priority</label>
-            <select id="projectPrioritySelect">
-                <option value="low">Low</option>
-                <option value="medium" selected>Medium</option>
-                <option value="high">High</option>
-                <option value="urgent">Urgent</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label>Project Color</label>
-            <div class="color-picker">
-                <div class="color-option" data-color="#4a6fa5" style="background-color: #4a6fa5;"></div>
-                <div class="color-option" data-color="#e74c3c" style="background-color: #e74c3c;"></div>
-                <div class="color-option" data-color="#2ecc71" style="background-color: #2ecc71;"></div>
-                <div class="color-option" data-color="#f39c12" style="background-color: #f39c12;"></div>
-                <div class="color-option" data-color="#9b59b6" style="background-color: #9b59b6;"></div>
-                <div class="color-option" data-color="#1abc9c" style="background-color: #1abc9c;"></div>
-            </div>
-        </div>
-        
-        <div class="modal-actions">
-            <button id="saveProjectBtn" class="primary-btn">Create Project</button>
-            <button id="cancelProjectBtn">Cancel</button>
-        </div>
-    </div>
-</div>
+        <!-- Team Member Modal -->
+        <div id="teamMemberModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" id="closeTeamModal">&times;</span>
+                <h2>Add Team Member</h2>
+                
+                <div class="form-group">
+                    <label for="memberFirstName">First Name</label>
+                    <input type="text" id="memberFirstName" placeholder="Enter team member first name">
+                </div>
+                <div class="form-group">
+                    <label for="memberLastName">Last Name</label>
+                    <input type="text" id="memberLastName" placeholder="Enter team member last name">
+                </div>
 
-    <script type="module" src="index.js"></script>
+                <div class="form-group">
+                    <label for="memberEmail">Email</label>
+                    <input type="text" id="memberEmail" placeholder="Enter team member email">
+                </div>
+
+                <div class="form-group">
+                    <label for="memberPhoneNumber">Phone Number</label>
+                    <input type="text" id="memberPhoneNumber" placeholder="Enter team member email">
+                </div>
+                
+                <div class="form-group">
+                    <label>Color</label>
+                    <div class="color-picker">
+                        <div class="color-option" data-color="#4a6fa5" style="background-color: #4a6fa5;"></div>
+                        <div class="color-option" data-color="#e74c3c" style="background-color: #e74c3c;"></div>
+                        <div class="color-option" data-color="#2ecc71" style="background-color: #2ecc71;"></div>
+                        <div class="color-option" data-color="#f39c12" style="background-color: #f39c12;"></div>
+                        <div class="color-option" data-color="#9b59b6" style="background-color: #9b59b6;"></div>
+                        <div class="color-option" data-color="#1abc9c" style="background-color: #1abc9c;"></div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button id="saveTeamMemberBtn" class="primary-btn">Add Member</button>
+                    <button id="cancelTeamMemberBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Modal -->
+        <div id="projectModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" id="closeProjectModal">&times;</span>
+                <h2>Add New Workflow</h2>
+                
+                <div class="form-group">
+                    <label for="projectNameInput">Workflow Name</label>
+                    <input type="text" id="projectNameInput" placeholder="Enter workflow name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="projectDescriptionInput">Description</label>
+                    <textarea id="projectDescriptionInput" placeholder="Describe the workflow goals and scope"></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button id="saveProjectBtn" class="primary-btn">Create Workflow</button>
+                    <button id="cancelProjectBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backend Connection Error Modal -->
+    <div id="connectionErrorModal" class="modal error-modal">
+        <div class="modal-content">
+            <h2>❌ Connection Error</h2>
+            <p>Unable to connect to the backend server. Please check:</p>
+            <ul>
+                <li>Server is running on <code>http://localhost:8000</code></li>
+                <li>CORS is properly configured</li>
+                <li>Network connection is stable</li>
+            </ul>
+            <div class="modal-actions">
+                <button id="retryConnectionBtn" class="primary-btn">🔄 Retry Connection</button>
+                <button id="offlineModeBtn" class="secondary-btn">📱 Work Offline</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/connection-manager.js"></script>
+    <script src="js/backend-bridge.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/dom.js"></script>
+    <script src="js/gantt.js"></script>
+    <script src="js/kanban.js"></script>
+    <script src="js/taskview.js"></script>
+    <script src="js/detailed-task.js"></script>
+    <script src="js/modals.js"></script>
+    <script src="js/settings-manager.js"></script>
+    <script src="js/app.js"></script>
+
+
 </body>
 </html>

@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "firefox",
+      "request": "attach",
+      "name": "Attach to Chrome (Live Server)",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+/* ============ BOARD HEADER ============ */
+
+.board-header {
+    background: white;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+/* Header Info */
+.header-info {
+    margin-bottom: var(--spacing-lg);
+}
+
+.header-info h2 {
+    color: var(--text-dark);
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.header-info h3 {
+    color: var(--text-muted);
+    font-size: 18px;
+    font-weight: 400;
+}
+
+/* View Switcher */
+.view-switcher {
+    display: flex;
+    gap: 10px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.view-btn {
+    padding: 10px var(--spacing-lg);
+    border: 1px solid var(--border-color);
+    background: white;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    font-size: 14px;
+}
+
+.view-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.view-btn:hover:not(.active) {
+    background: var(--light-bg);
+}
+
+/* Task Input Container */
+.task-input-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.task-input-container input {
+    flex: 1;
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+}
+
+.task-input-container select {
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    min-width: 150px;
+}
+
+.task-input-container button {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition-normal);
+}
+
+.task-input-container button:hover {
+    background: #3a5998;
+}
