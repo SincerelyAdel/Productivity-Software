@@ -9,10 +9,10 @@
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    height: 100vh; /* or 100% if inside a fixed-height parent */
+    height: 100vh;
+    z-index: 1000;
 }
 
-/* Logo */
 .logo h1 {
     color: var(--primary-color);
     margin-bottom: var(--spacing-xl);

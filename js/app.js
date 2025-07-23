@@ -34,9 +34,10 @@ const app = {
      * Initialize the application with backend data
      */
     init: async () => {
+        debugger;
         
         try {
-            if (sessionStorage.getItem("access_token")) {
+            // if (sessionStorage.getItem("access_token")) {
                 
                 app.showGlobalLoading();
                 
@@ -56,7 +57,8 @@ const app = {
                 app.workspaces = await get_workspaces_data();
                 app.workflows = await get_workflows_data();
                 app.teamMembers = await get_members_data();
-                app.currentUserId = sessionStorage.getItem("member_id");
+                // app.currentUserId = sessionStorage.getItem("member_id");
+                app.currentUserId = 1;
                 app.access_token = sessionStorage.getItem("access_token");
                 app.currentUser = await API.members.get(app.currentUserId);
 
@@ -74,7 +76,7 @@ const app = {
                 app.switchView('kanban');
                 
                 app.hideGlobalLoading();    
-            }
+            // }
         } catch (error) {
             console.error('❌ Failed to initialize WorkspaceFlow:', error);
             app.showErrorMessage('Failed to initialize application. Please refresh the page.');
@@ -572,7 +574,8 @@ const app = {
      * Get current user ID (placeholder - implement based on your auth system)
      */
     getCurrentUserId: () => {
-        return app.currentUserId;
+        // return app.currentUserId;
+        return 1;
     },
 
     // ============ UI STATE MANAGEMENT ============
@@ -829,7 +832,11 @@ const app = {
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     app.init();
+
+    document.documentElement.setAttribute('dir', 'rtl');
 });
+
+
 
 
 window.app = app;
